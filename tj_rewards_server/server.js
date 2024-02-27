@@ -131,9 +131,11 @@ app.use((err, req, res, next) => {
     res.status(500).send('something broke!')
 })
 
-app.listen(8080, '0.0.0.0', () => {
-    console.log('Server is running on port 8080')
+const server = app.listen(8080, () => {
+    console.log(`Listening on ${server.address().port}`)
 })
+
+console.log(await createUser('james', 'mcaleer', 'jamesjmac', 'lotus'))
 
 // remeber to replace the blank with the IP so that it is not local host
 // this way the app can access the server
