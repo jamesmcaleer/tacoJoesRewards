@@ -70,6 +70,7 @@ export async function updatePoints(id, points) {
     const user = await getUserWithID(id)
     const currentPoints = user.points
 
+    // need a way for ex. they have 120 points and recieve 10 points, to be left over with 5
     var newPoints = currentPoints + points
     if (newPoints > 125){
         newPoints = 125
@@ -134,6 +135,7 @@ export async function useReward(id){
         WHERE id = ?;
         `, [newRewardsString, id])
     }
+    // else return invalid/expired reward
     
     return getUserWithID(id);
 }

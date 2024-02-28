@@ -311,13 +311,13 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final apiUrl = "http://192.168.1.19:8080/users/login";
+  final apiUrl = "http://13.58.181.42:8080/login";
   final _formKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
   Future<void> sendPostRequest() async {
-    var response = await http.post(apiUrl,
+    var response = await http.post(Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
           "email": emailController.text,

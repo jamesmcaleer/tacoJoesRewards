@@ -28,6 +28,10 @@ const app = express()
 
 app.use(express.json())
 
+app.get("/", async (req, res) => {
+    res.send("hi")
+})
+
 app.get("/users", async (req, res) => {
     const users = await getUsers()
     res.send(users)
@@ -135,7 +139,11 @@ const server = app.listen(8080, () => {
     console.log(`Listening on ${server.address().port}`)
 })
 
-//console.log(await createUser('james', 'mcaleer', 'jamesjmac', 'lotus'))
+//console.log(await createUser('test', 'name', 'testem', 'testp'))
 
-// remeber to replace the blank with the IP so that it is not local host
-// this way the app can access the server
+// next i should develop the app further, make the email look nicer, and add a db feature for deleting accounts
+// check comments in DB
+// 
+
+// remember to set DB to private, also dont log in with admin but instead with a user with less privleges
+// also change the security group to only allow the VPC or security group of the EC2 instance
