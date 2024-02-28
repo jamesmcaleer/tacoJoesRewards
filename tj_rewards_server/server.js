@@ -131,7 +131,7 @@ app.use((err, req, res, next) => {
     res.status(500).send('something broke!')
 })
 
-const server = app.listen(8080, '0.0.0.0', () => {
+const server = app.listen(3000, '0.0.0.0', () => {
     console.log(`Listening on ${server.address().port}`)
 })
 
