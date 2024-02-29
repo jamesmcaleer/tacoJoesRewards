@@ -324,15 +324,20 @@ class _LoginState extends State<Login> {
           "password": passwordController.text,
         }));
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Post created successfully!"),
+        content: Text("Login Successful!"),
       ));
-    } else {
+    } else if (response.statusCode == 404) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text("Failed to create post!"),
+        content: Text("Email not found"),
+      ));
+    } else if (response.statusCode == 400) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Incorrect password"),
       ));
     }
+    
   }
 
   @override

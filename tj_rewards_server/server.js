@@ -47,6 +47,8 @@ app.get("/users/:id", async (req, res) => {
 
 // FORGOT PASSWORD
 app.post("/forgot", async (req, res) => {
+    console.log("forgot password attempt")
+    
     const {email} = req.body
     const user = await getUserWithEmail(email)
     if (!user){
@@ -81,6 +83,8 @@ app.post("/forgot", async (req, res) => {
 
 // LOGIN ATTEMPT
 app.post("/login", async (req, res) => {
+    console.log("login attempt")
+
     const {email, password} = req.body
     const user = await getUserWithEmail(email)
     if (!user){
@@ -100,9 +104,11 @@ app.post("/login", async (req, res) => {
 
 // CREATE ACCOUNT
 app.post("/create", async (req, res) => {
-    const {first, last, password, email} = req.body
+    console.log("create account attempt")
+    
+    const {first, last, email, password} = req.body
     if (!(await getUserWithEmail(email))){
-        const user = await createUser(first, last, password, email)
+        const user = await createUser(first, last, email, password)
         res.status(201).send(user)
     }
     else{
@@ -121,6 +127,8 @@ app.get("/rewards/:id", async (req, res) => {
 
 // ADD POINTS
 app.post("/update", async (req, res) =>{
+    console.log("update points attempt")
+    
     const {id, points} = req.body
     const updatedUser = await updatePoints(id, points)
     res.status(200).send(updatedUser)

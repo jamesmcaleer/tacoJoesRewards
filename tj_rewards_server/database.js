@@ -34,7 +34,7 @@ export async function getUserWithEmail(email) {
     return row[0]
 }
 
-export async function createUser(first, last, password, email) {
+export async function createUser(first, last, email, password) {
     const [result] = await pool.query(`
     INSERT INTO users (first, last, password, email)
     VALUES (?, ?, ?, ?)
