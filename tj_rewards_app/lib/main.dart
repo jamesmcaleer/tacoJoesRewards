@@ -47,8 +47,37 @@ class Forgot extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<Forgot> {
+  final apiUrl = "http://13.58.181.42:8080/forgot";
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController emailController = TextEditingController();
+
+  Future<void> sendForgotPostRequest() async {
+    var response = await http.post(Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "email": emailController.text
+        }));
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Account recovery email sent!"),
+        ));
+    } else if (response.statusCode == 404) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("No account associated with this email"),
+      ));
+    } else if (response.statusCode == 400) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Account recovery email failed to send"),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Unknown Error"),
+      ));
+    }
+    
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +97,7 @@ class _ForgotPasswordState extends State<Forgot> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   child: Text(
-                    'Forgot Password',
+                    'Forgot Password?',
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
@@ -76,7 +105,7 @@ class _ForgotPasswordState extends State<Forgot> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   child: TextFormField(
                     controller: emailController,
                     decoration: const InputDecoration(
@@ -95,7 +124,7 @@ class _ForgotPasswordState extends State<Forgot> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // Navigate the user to the Home page
+                          sendForgotPostRequest();
                           
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -119,38 +148,49 @@ class _ForgotPasswordState extends State<Forgot> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 24),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Recieved temporary password? "),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Login(title: 'Taco Joes')),
-                          );
-                        },
-                        child: Text(
-                          'Return to login page',
-                          style: TextStyle(
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
+                      Text("Don't see an email? Check your spam folder"),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("Make sure to check your spam folder"),
+                      Text("Follow the steps in the email to recover your account"),
                     ],
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const Login(title: 'Taco Joes')),
+                            );
+                          },
+                          child: Text(
+                            'Return to login page',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                    ]
+                  )
+                  
+                )
+                
                 
               ],
             ),
@@ -171,11 +211,47 @@ class Create extends StatefulWidget {
 }
 
 class _CreateAccountState extends State<Create> {
+  final apiUrl = "http://13.58.181.42:8080/create";
   final _formKey = GlobalKey<FormState>();
+
   TextEditingController firstController = TextEditingController();
   TextEditingController lastController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  Future<void> sendCreatePostRequest() async {
+    var response = await http.post(Uri.parse(apiUrl),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode({
+          "first": firstController.text,
+          "last": lastController.text,
+          "email": emailController.text,
+          "password": passwordController.text,
+        }));
+
+    if (response.statusCode == 201) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Account Creation Successfull!"),
+        ));
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const Login(title: 'Taco Joes')),
+      );
+    } else if (response.statusCode == 405) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Email is already in use"),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Unknown Error"),
+      ));
+    }
+    
+  }
+  
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -266,10 +342,8 @@ class _CreateAccountState extends State<Create> {
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           // Navigate the user to the Home page
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const Login(title: 'Taco Joes')),
-                          );
+                          sendCreatePostRequest();
+                          
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Please fill input')),
@@ -316,7 +390,7 @@ class _LoginState extends State<Login> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  Future<void> sendPostRequest() async {
+  Future<void> sendLoginPostRequest() async {
     var response = await http.post(Uri.parse(apiUrl),
         headers: {"Content-Type": "application/json"},
         body: jsonEncode({
@@ -327,7 +401,13 @@ class _LoginState extends State<Login> {
     if (response.statusCode == 200) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Login Successful!"),
-      ));
+        ));
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const Forgot(title: 'Taco Joes')),
+      );
+
     } else if (response.statusCode == 404) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Email not found"),
@@ -335,6 +415,10 @@ class _LoginState extends State<Login> {
     } else if (response.statusCode == 400) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Incorrect password"),
+      ));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Unknown Error"),
       ));
     }
     
@@ -420,7 +504,7 @@ class _LoginState extends State<Login> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          sendPostRequest();
+                          sendLoginPostRequest();
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text('Please fill input')),

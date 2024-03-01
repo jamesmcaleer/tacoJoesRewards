@@ -28,9 +28,22 @@ const app = express()
 
 app.use(express.json())
 
+
+// beginning of email test code
+
+app.set('view engine', 'ejs') 
+app.use(express.static('public'));
+
+
+var mailOptionsAdditions = {
+    to : "test",
+    password : "bifewbfi"
+}
 app.get("/", async (req, res) => {
-    res.send("hi")
+    res.render('password-reset-template.ejs', {mailOptionsAdditions})
 })
+
+// end of email test code
 
 app.get("/users", async (req, res) => {
     const users = await getUsers()
@@ -58,7 +71,7 @@ app.post("/forgot", async (req, res) => {
         const temporaryPassword = await generateTemporaryPassword()
         const result = await updatePassword(user.id, temporaryPassword)
 
-        const mailOptionsAdditions = {
+        var mailOptionsAdditions = {
             to : email,
             password : temporaryPassword
         }
