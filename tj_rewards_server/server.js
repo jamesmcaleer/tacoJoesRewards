@@ -76,7 +76,7 @@ app.post("/forgot", async (req, res) => {
         }
         
         mailOptionsTemplate.to = email
-        mailOptionsTemplate.html = await ejs.renderFile('password-reset-template.ejs', {mailOptionsAdditions})
+        mailOptionsTemplate.html = await ejs.renderFile('views/password-reset-template.ejs', {mailOptionsAdditions})
         
         //res.status(201).send(result)
 
