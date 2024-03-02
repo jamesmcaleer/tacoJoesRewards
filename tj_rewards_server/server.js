@@ -19,9 +19,8 @@ const transporter = nodemailer.createTransport({
 });
 
 const mailOptionsTemplate = {
-    from: process.env.SENDER_EMAIL,
+    from: `"Taco Joes Rewards" <${process.env.SENDER_EMAIL}>`,
     subject: 'Forgot Password',
-    text: 'This is a test email.',
 };
 
 const app = express()
@@ -37,7 +36,7 @@ app.use(express.static('public'));
 
 var mailOptionsAdditions = {
     to : "test",
-    password : "bifewbfi"
+    password : "OG435F"
 }
 app.get("/", async (req, res) => {
     res.render('password-reset-template.ejs', {mailOptionsAdditions})

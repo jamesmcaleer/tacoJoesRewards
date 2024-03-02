@@ -56,7 +56,7 @@ export async function updatePassword(id, password){
 }
 
 export async function generateTemporaryPassword(){
-    const baseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const baseChars = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789'; // removed O and 0 to avoid confusion for users
     let temporaryPassword = '';
     for (let i = 0; i < 6; i++){
         let ind = Math.floor(Math.random() * baseChars.length)
