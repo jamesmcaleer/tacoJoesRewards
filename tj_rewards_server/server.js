@@ -2,7 +2,7 @@ import express from 'express'
 import nodemailer from 'nodemailer'
 import ejs from 'ejs'
 
-import {getUsers, getUserWithID, getUserWithEmail, createUser, updatePassword, generateTemporaryPassword, updatePoints, useReward} from './database.js'
+import {getUsers, getUserWithID, getUserWithEmail, createUser, deleteUser, updatePassword, generateTemporaryPassword, updatePoints, useReward} from './database.js'
 
 import dotenv from 'dotenv'
 dotenv.config()
@@ -127,6 +127,19 @@ app.post("/create", async (req, res) => {
         res.status(405).send("email taken")
     }
     
+})
+
+app.post("/delete", async (req, res) => {
+    console.log("delete account attempt")
+
+    const {email} = req.body
+    if (await getUserWithEmail(email)){
+        const user = await deleteUser(email)
+        res.status(201).send(user)
+    }
+    else{
+        res.status(405).send("user not found")
+    }
 })
 
 
